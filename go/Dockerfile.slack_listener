@@ -1,0 +1,15 @@
+FROM golang:1.11
+RUN mkdir /go/src/app
+WORKDIR /go/src/app
+RUN export GOPATH=/go/src/app
+RUN go get github.com/streadway/amqp
+RUN go get -u github.com/gin-gonic/gin
+RUN go get github.com/prometheus/client_golang/prometheus 
+RUN go get github.com/prometheus/client_golang/prometheus/promauto
+RUN go get github.com/prometheus/client_golang/prometheus/promhttp
+COPY ./slackevents ./slackevents
+COPY listener.go listener.go
+EXPOSE 8080
+EXPOSE 9090
+RUN go build -o main *.go
+CMD ["/go/src/app/main"]

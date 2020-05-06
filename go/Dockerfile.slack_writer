@@ -1,0 +1,10 @@
+FROM golang:1.11
+RUN mkdir /go/src/app
+WORKDIR /go/src/app
+RUN export GOPATH=/go/src/app
+RUN go get github.com/streadway/amqp
+COPY ./slackevents ./slackevents
+COPY writer.go writer.go
+RUN cd slackevents && go build  && cd ..
+RUN go build -o main *.go
+CMD ["/go/src/app/main"]
